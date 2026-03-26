@@ -396,6 +396,16 @@ function downloadImage() {
   a.download = "compressed.jpg";
   a.click();
 }
+const slider = document.getElementById("quality");
+const qualityValue = document.getElementById("qualityValue");
+
+// initial value
+qualityValue.innerText = Math.round(slider.value * 100) + "%";
+
+// jab slider move ho
+slider.oninput = function() {
+  qualityValue.innerText = Math.round(this.value * 100) + "%";
+};
 </script>
 </body>
   </html>
