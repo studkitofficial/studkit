@@ -125,7 +125,10 @@ canvas {
 <input type="file" id="upload" accept="image/*"><br>
 
 <label>Quality:</label><br>
-<input type="range" id="quality" min="0.1" max="1" step="0.1" value="0.7"><br>
+
+<input type="range" id="quality" min="0.1" max="1" step="0.1" value="0.7" oninput="updateQuality(this.value)">
+
+<p>Quality: <span id="qualityValue">70%</span></p>
 
 <button onclick="compressImage()">Compress</button>
 <button onclick="downloadImage()">Download</button>
