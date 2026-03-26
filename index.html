@@ -117,6 +117,29 @@ canvas {
 <h1>🚀 StudKit Pro</h1>
 
 <div class="container">
+  
+<!-- IMAGE COMPRESSOR TOOL -->
+<div class="card">
+<h2>Image Compressor</h2>
+
+<input type="file" id="upload" accept="image/*"><br>
+
+<label>Quality:</label><br>
+<input type="range" id="quality" min="0.1" max="1" step="0.1" value="0.7"><br>
+
+<button onclick="compressImage()">Compress</button>
+<button onclick="downloadImage()">Download</button>
+
+<div>
+<h4>Before</h4>
+<img id="before" style="max-width:100%;">
+<p id="beforeSize"></p>
+
+<h4>After</h4>
+<img id="after" style="max-width:100%;">
+<p id="afterSize"></p>
+</div>
+</div>
 
 <!-- WORD -->
 <div class="card">
@@ -325,7 +348,54 @@ pdf.addImage(img,'PNG',10,10,180,0);
 pdf.save("resume.pdf");
 }
 
-</script>
+let compressedData;
 
+function formatSize(bytes) {
+  return (bytes / 1024).toFixed(2) + " KB";
+}
+
+function compressImage() {
+  const file = document.getElementById("upload").files[0];
+  if (!file) return alert("Upload image first");
+
+  document.getElementById("before").src = URL.createObjectURL(file);
+  document.getElementById("beforeSize").innerText = "Size: " + formatSize(file.size);
+
+  const quality = document.getElementById("quality").value;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.src = e.target.result;
+
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0);
+
+      compressedData = canvas.toDataURL("image/jpeg", quality);
+
+      document.getElementById("after").src = compressedData;
+
+      const size = Math.round((compressedData.length * 3) / 4);
+      document.getElementById("afterSize").innerText = "Size: " + formatSize(size);
+    };
+  };
+  reader.readAsDataURL(file);
+}
+
+function downloadImage() {
+  if (!compressedData) return alert("Compress first");
+
+  const a = document.createElement("a");
+  a.href = compressedData;
+  a.download = "compressed.jpg";
+  a.click();
+}
+</script>
 </body>
   </html>
